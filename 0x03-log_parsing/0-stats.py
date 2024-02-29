@@ -25,15 +25,16 @@ if __name__ == "__main__":
     try:
         for line in sys.stdin:
             try:
-                status_code = line.split()[-2]
-                if status_code in codes_count.keys():
-                    codes_count[status_code] += 1
-                # Grab file size
-                file_size = int(line.split()[-1])
-                file_size_total += file_size
-            except Exception:
+                parts = line.split()
+                if len(parts) >= 9:
+                    status_code = parts[-2]
+                    if status_code in codes_count:
+                        codes_count[status_code] += 1
+                    file_size = int(parts[-1])
+                    file_size_total += file_size
+            except ValueError:
                 pass
-            # print metrics if 10 lines have been read
+
             count += 1
             if count == 10:
                 print_metrics(file_size_total, codes_count)
@@ -41,4 +42,4 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         print_metrics(file_size_total, codes_count)
         raise
-   print_metrics(file_size_total, codes_count)
+    print_metrics(file_size_total, codes_count)
